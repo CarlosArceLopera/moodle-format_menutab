@@ -56,9 +56,6 @@ class migrate_labels_to_subsections_adhoc extends \core\task\adhoc_task {
 
         $nextsection = $maxsection + 1;
 
-        // Start a transaction to ensure data integrity.
-        $transaction = $DB->start_delegated_transaction();
-
         // Get all sections for this course (excluding section 0).
         $sections = $DB->get_records_select(
             'course_sections',
@@ -225,9 +222,6 @@ class migrate_labels_to_subsections_adhoc extends \core\task\adhoc_task {
 
         // Rebuild the course cache.
         rebuild_course_cache($course->id, true);
-
-        // Commit the transaction.
-        $transaction->allow_commit();
 
         mtrace("Completed course: {$course->fullname}");
     }
