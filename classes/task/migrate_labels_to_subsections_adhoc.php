@@ -203,10 +203,10 @@ class migrate_labels_to_subsections_adhoc extends \core\task\adhoc_task {
 
                 // 5. Delete the h2 labels.
                 foreach ($labelstodelete as $cmid) {
-                    $cm = $DB->get_record('course_modules', ['id' => $cmid]);
-                    if ($cm) {
-                        $DB->delete_records('label', ['id' => $cm->instance]);
-                        $DB->delete_records('course_modules', ['id' => $cmid]);
+                    // Get the course module object.
+                    if ($cm = get_coursemodule_from_id('label', $cmid)) {
+                        // Use course_delete_module to ensure all related data is cleaned up.
+                        course_delete_module($cmid);
                         mtrace("    Deleted h2 label module {$cmid}");
                     }
                 }
